@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">幻视视频</title>
+  <desc id="logo-desc">由字母 H 骨架与播放符号组成的幻视视频品牌标识</desc>
+
+  <rect x="17" y="16" width="24" height="88" rx="12" fill="#0EA5E9" />
+  <rect x="79" y="16" width="24" height="88" rx="12" fill="#2563EB" />
+  <rect x="30" y="47" width="60" height="26" rx="13" fill="#18181B" />
+  <path d="m54 51 16 9-16 9Z" fill="#FB7185" />
+</svg>
