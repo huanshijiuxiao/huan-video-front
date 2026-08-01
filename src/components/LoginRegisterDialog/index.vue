@@ -23,7 +23,7 @@
     >
       <el-form-item prop="email">
         <el-input
-          v-model.trim="loginForm.email"
+          v-model.trim="loginForm.username"
           :prefix-icon="Message"
           placeholder="请输入邮箱"
           size="large"
@@ -191,7 +191,7 @@ const isVisible = computed({
 });
 
 const loginForm = reactive<LoginForm>({
-  email: "",
+  username: "",
   password: "",
   remember: false,
 });
@@ -218,7 +218,7 @@ const validateConfirmPassword = (_rule: unknown, value: string, callback: (error
 };
 
 const loginRules = reactive<FormRules<LoginForm>>({
-  email: [
+  username: [
     { required: true, message: "请输入邮箱地址", trigger: "blur" },
     { type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"] },
   ],
@@ -318,7 +318,7 @@ async function handleLogin() {
 
   try {
     await authStore.login({
-      email: loginForm.email,
+      username: loginForm.username,
       password: loginForm.password,
     });
 
@@ -347,7 +347,7 @@ async function handleRegister() {
 
     ElMessage.success("注册成功，请登录");
     emit("register", { ...registerForm });
-    loginForm.email = registerForm.email;
+    loginForm.username = registerForm.email;
     loginForm.password = "";
     activeTab.value = "login";
     resetForms();

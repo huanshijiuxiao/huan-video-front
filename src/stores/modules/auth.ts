@@ -1,11 +1,11 @@
 import type { AuthorizeVO, LoginParams, RegisterParams, UserInfo } from "@/types/user";
-import { getToken, removeToken, setToken } from "@/utils/auth";
+import { clearTokens, getAccessToken, setAccessToken, setRefreshToken } from "@/utils/auth";
 import { defineStore } from "pinia";
 import { store } from "@/stores";
 import { getCurrentUserInfo, login, logout, register } from "@/api/user";
 
 interface AuthState {
-  token: string | null;
+  accessToken: string | null;
   userInfo: UserInfo | null;
   roles?: string[];
   role?: string | null;
@@ -14,31 +14,32 @@ interface AuthState {
 export const useAuthStore = defineStore({
   id: "user",
   state: (): AuthState => ({
-    token: getToken() || null,
+    accessToken: getAccessToken() || null,
     userInfo: null,
     role: null,
   }),
   getters: {
-    getToken: (state) => {
-      return state.token || getToken();
+    getAccessToken: (state) => {
+      return state.accessToken || getAccessToken();
     },
     getUserInfo: (state) => state.userInfo,
     getUserId: (state) => state.userInfo?.uid,
-    isAuthenticated: (state) => state.token,
+    isAuthenticated: (state) => Boolean(state.accessToken),
     isAdmin: (state) => state.userInfo?.role === "ADMIN" || state.role === "ADMIN",
   },
   actions: {
     async login(credentials: LoginParams) {
       const response = await login(credentials);
 
-      if (response.code !== 200 || !response.data?.token) {
+      if (response.code !== 200 || !response.data?.accessToken) {
         throw new Error(response.msg || "登录失败，请稍后重试");
       }
 
-      const { token, role } = response.data as AuthorizeVO;
-      this.token = token;
+      const { accessToken, role } = response.data as AuthorizeVO;
+      this.accessToken = accessToken;
       this.role = role ?? null;
-      setToken(token);
+      setAccessToken(accessToken);
+      setRefreshToken(response.data.refreshToken);
 
       await this.fetchUserInfo();
       return response.data;
@@ -55,13 +56,13 @@ export const useAuthStore = defineStore({
     },
 
     async fetchUserInfo() {
-      const token = this.token || getToken();
+      const accessToken = this.accessToken || getAccessToken();
 
-      if (!token) {
+      if (!accessToken) {
         throw new Error("Token不存在，请先登录");
       }
 
-      this.token = token;
+      this.accessToken = accessToken;
 
       try {
         const response = await getCurrentUserInfo();
@@ -76,7 +77,7 @@ export const useAuthStore = defineStore({
 
         return data;
       } catch (error) {
-        this.resetToken();
+        this.clearAuth();
         console.error("获取用户信息失败:", error);
         throw error;
       }
@@ -88,17 +89,17 @@ export const useAuthStore = defineStore({
       } catch (error) {
         console.error("登出请求失败:", error);
       } finally {
-        this.resetToken();
+        this.clearAuth();
         window.location.reload();
       }
     },
 
-    resetToken() {
-      this.token = null;
+    clearAuth() {
+      this.accessToken = null;
       this.userInfo = null;
       this.roles = [];
       this.role = null;
-      removeToken();
+      clearTokens();
     },
 
     async loginDialogShown() {

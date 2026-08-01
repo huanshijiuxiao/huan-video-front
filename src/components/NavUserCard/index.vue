@@ -75,7 +75,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import router from '@/router';
 import { useLoginDialog } from '@/components/LoginRegisterDialog/useLoginDialog';
 import { useAuthStore } from '@/stores/modules/auth';
 import NumberUtil from '@/utils/NumberUtil';

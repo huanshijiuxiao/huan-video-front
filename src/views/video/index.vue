@@ -221,7 +221,7 @@ watch(aid, async (newAid, oldAid) => {
 }, { immediate: false });
 
 watch(
-  () => authStore.token,
+  () => authStore.accessToken,
   (token) => {
     if (!token) {
       isWebSocketInitialized.value = false;

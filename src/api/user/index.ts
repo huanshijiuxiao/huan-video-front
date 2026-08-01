@@ -1,4 +1,5 @@
 import http from "@/utils/http.ts";
+import { getRefreshToken } from "@/utils/auth";
 import type {
   AccountProfileParams,
   AuthorizeVO,
@@ -12,7 +13,7 @@ export function login(data: LoginParams) {
   return http.request({
     url: "/user/login",
     method: "post",
-    data,
+    data: { email: data.username, password: data.password },
   }) as Promise<{ code: number; msg: string; data: AuthorizeVO }>;
 }
 
@@ -74,8 +75,10 @@ export function updatePassword(data: ChangePasswordParams) {
 }
 
 export function logout() {
+  const refreshToken = getRefreshToken();
   return http.request({
     url: "/user/logout",
     method: "post",
+    data: refreshToken ? { refreshToken } : undefined,
   }) as Promise<{ code: number; msg: string; data: unknown }>;
 }

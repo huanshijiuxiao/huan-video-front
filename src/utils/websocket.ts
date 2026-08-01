@@ -1,6 +1,6 @@
 ﻿import { io, Socket } from 'socket.io-client';
 import type { Barrage } from '@/types/barrage';
-import { getToken } from '@/utils/auth';
+import { getAccessToken } from '@/utils/auth';
 import type { NotificationPush } from '@/types/notification';
 
 class WebSocketService {
@@ -29,7 +29,7 @@ class WebSocketService {
     this.connectPromise = new Promise<void>((resolve, reject) => {
       this.connectResolve = resolve;
 
-      const authToken = token || getToken() || '';
+      const authToken = token || getAccessToken() || '';
 
       const options: any = {
         transports: ['websocket', 'polling'],

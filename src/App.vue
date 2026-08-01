@@ -12,14 +12,14 @@ initTheme();
 
 const authStore = useAuthStore();
 const chatStore = useChatStore();
-const { token } = storeToRefs(authStore);
+const { accessToken } = storeToRefs(authStore);
 
 function handlePrivateMessage(message: any) {
   chatStore.receivePrivateMessage(message);
 }
 
 watch(
-  token,
+  accessToken,
   (currentToken) => {
     if (!currentToken) {
       websocketService.offNewMessage(handlePrivateMessage);

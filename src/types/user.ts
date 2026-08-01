@@ -15,20 +15,29 @@ export interface UserInfo {
   dynamicCount: number;
   coins: number;
   role?: string;
+  roles?: string[];
+  permissions?: string[];
 }
 
 export interface AuthorizeVO {
-  token: string;
-  expire: string;
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiresAt: string;
+  refreshTokenExpiresAt: string;
   role?: string | null;
 }
 
 export interface LoginParams { 
-  email: string;
+  username: string;
   password: string;
 }
 
 export interface RegisterParams {
+  username?: string;
+  nickname?: string;
+  sex?: number;
+  birthday?: string;
+  introduction?: string;
   email: string;
   password: string;
   code: string;

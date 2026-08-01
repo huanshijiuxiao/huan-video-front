@@ -270,7 +270,7 @@ router.beforeEach(async(to, _from, next) => {
       }
     } catch (error) {
       console.error('获取用户信息失败:', error);
-      authStore.resetToken();
+      authStore.clearAuth();
       
       const { showLoginDialog } = useLoginDialog();
       showLoginDialog({
